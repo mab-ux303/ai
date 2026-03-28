@@ -1,0 +1,30 @@
+name = "drivly-ai-orchestrator"
+main = "src/index.ts" # آپ کے مین انٹری پوائنٹ کا راستہ
+compatibility_date = "2024-03-28"
+
+# 1. ایجنٹس کی یادداشت کے لیے Durable Objects
+[durable_objects]
+bindings = [
+  { name = "AGENTS", class_name = "AgentClass" },
+  { name = "BROWSER_SESSIONS", class_name = "BrowserDO" },
+  { name = "LLM_CONTEXT", class_name = "LLMDO" }
+]
+
+# 2. SQLite بیک اینڈ کے لیے مائیگریشن (فری پلان کے لیے لازمی)
+[[migrations]]
+tag = "v1" # پہلا ورژن
+new_classes = ["AgentClass", "BrowserDO", "LLMDO"]
+
+# 3. تیز رفتار ڈیٹا کے لیے KV Namespace
+[[kv_namespaces]]
+binding = "AI_CACHE"
+id = "xxxx_your_kv_id_xxxx" # یہ کلاؤڈ فلیر ڈیش بورڈ سے ملے گا
+
+# 4. ایجنٹ کے ماحولیاتی متغیرات (Environment Variables)
+[vars]
+ENVIRONMENT = "production"
+# یہاں اپنے AI ماڈلز کی API Keys ڈال سکتے ہیں (بہتر ہے کہ Secret استعمال کریں)
+
+# 5. اگر آپ فرنٹ اینڈ بھی کلاؤڈ فلیر پر رکھنا چاہتے ہیں
+[site]
+bucket = "./public" # آپ کے ویب انٹرفیس کا فولڈر
